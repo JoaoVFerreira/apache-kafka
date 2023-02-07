@@ -3,8 +3,8 @@ version: "3"
 services:
   app:
     build: .
-    container-name: simulator
+    container_name: simulator
     volumes:
       - .:/go/src/
-    extra-hosts:
+    extra_hosts:
       - "host.docker.internal:172.17.0.1"
