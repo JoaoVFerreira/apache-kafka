@@ -9,7 +9,13 @@ import (
 )
 
 type KafkaConsumer struct {
-	msgChan chan *ckafka.Message
+	MsgChan chan *ckafka.Message
+}
+
+func NewKafkaConsumer(msgChan chan *ckafka.Message) *KafkaConsumer {
+	return &KafkaConsumer{
+		MsgChan: msgChan,
+	}
 }
 
 func (k *KafkaConsumer) Consume() {
@@ -17,7 +23,7 @@ func (k *KafkaConsumer) Consume() {
 		"bootstrap.servers": os.Getenv("KafkaBootstrapServers"),
 		"group.id":          os.Getenv("KafkaConsumerGroupId"),
 	}
-	c, err = ckafka.newConsumer(configMap)
+	c, err := ckafka.NewConsumer(configMap)
 	if err != nil {
 		log.Fatalf("Error consuming kafka message:" + err.Error())
 	}
@@ -27,7 +33,7 @@ func (k *KafkaConsumer) Consume() {
 	for {
 		msg, err := c.ReadMessage(-1)
 		if err == nil {
-			k.msgChan <- msg
+			k.MsgChan <- msg
 		}
 	}
 }
